@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Как завоевать клиентов? — Интенсив с Ольгой Грищенко</title>
+<title>Как завоевать клиентов? — Интенсив с Ольгой Грищенко</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +24,9 @@
 
   /* ── HERO ── */
   .hero {
-    background: linear-gradient(135deg, #5BB8F5 0%, #7ECFFF 60%, #C8F086 100%);
+    background: linear-gradient(135deg, #5BB8F5, #7ECFFF, #C8F086, #A8E63D, #7ECFFF);
+    background-size: 300% 300%;
+    animation: gradientShift 8s ease infinite;
     min-height: 520px;
     display: flex;
     align-items: center;
@@ -42,6 +44,29 @@
     align-items: center;
     width: 100%;
   }
+  /* ── HERO ANIMATIONS ── */
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes floatImg {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-14px); }
+  }
+  @keyframes pulseBtn {
+    0%, 100% { box-shadow: 0 8px 30px rgba(255,78,142,0.4); transform: scale(1); }
+    50%       { box-shadow: 0 12px 45px rgba(255,78,142,0.65); transform: scale(1.05); }
+  }
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   .hero-left { z-index: 2; }
   .hero-eyebrow {
     font-family: 'Montserrat', sans-serif;
@@ -51,6 +76,7 @@
     text-transform: uppercase;
     color: rgba(255,255,255,0.85);
     margin-bottom: 16px;
+    animation: slideInLeft 0.7s ease both;
   }
   .hero-title {
     font-family: 'Montserrat', sans-serif;
@@ -59,21 +85,20 @@
     color: #fff;
     line-height: 1.1;
     margin-bottom: 20px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    animation: slideInLeft 0.7s 0.15s ease both;
   }
   .hero-subtitle {
     font-family: 'Montserrat', sans-serif;
     font-size: 18px;
     font-weight: 600;
     color: rgba(255,255,255,0.92);
-    margin-bottom: 28px;
-    line-height: 1.4;
-  }
+    animation: fadeUp 0.7s 0.35s ease both;
   .hero-meta {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-bottom: 36px;
+    animation: fadeUp 0.7s 0.5s ease both;
   }
   .hero-meta span {
     font-size: 16px;
@@ -106,10 +131,7 @@
     text-decoration: none;
     border: none;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 8px 30px rgba(255,78,142,0.4);
-  }
-  .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(255,78,142,0.5); }
+    animation: fadeUp 0.7s 0.65s ease both, pulseBtn 2.5s 1.5s ease-in-out infinite;
   .hero-right {
     display: flex;
     justify-content: center;
@@ -121,6 +143,7 @@
     max-width: 100%;
     object-fit: contain;
     filter: drop-shadow(0 20px 40px rgba(0,0,0,0.15));
+    animation: fadeUp 0.9s 0.2s ease both, floatImg 5s 1.5s ease-in-out infinite;
   }
 
   /* ── SECTIONS COMMON ── */
@@ -424,9 +447,6 @@
     section { padding: 50px 16px; }
     .price-new { font-size: 36px; }
     .price-old { font-size: 22px; }
-    .buy-card img[src="cocktail.png"] { width: 90px; }
-    .buy-card img[src="lime-slice.png"] { width: 70px; }
-    .buy-card [style*="display:flex"] { flex-direction: column; align-items: center; gap: 12px; }
   }
 </style>
 </head>
@@ -436,9 +456,9 @@
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-left">
-      <div class="hero-eyebrow">Интенсив с Ольгой Грищенко</div>
+      <div class="hero-eyebrow">Интенсив с Ольгой Грищенко</div>
       <h1 class="hero-title">КАК ЗАВОЕВАТЬ КЛИЕНТОВ?</h1>
-      <p class="hero-subtitle">Большое исследование применения успеха LIME для экспертов</p>
+      <p class="hero-subtitle">Большое исследование применения успеха LIME для экспертов</p>
       <div class="hero-meta">
         <span class="date-badge">📅 16 июля &nbsp;·&nbsp; 18:00 мск</span>
       </div>
@@ -454,26 +474,26 @@
 <section class="crisis">
   <div class="container">
     <p class="crisis-text">
-      Вы наверняка заметили, сколько модных брендов в период кризиса были вынуждены закрыться, 
-      и сколько — прямо сейчас не зарабатывают, а только борются за выживание. Согласно ежегодному 
-      аналитическому отчёту крупнейшего консалтингового агентства в сфере моды в России 
-      <strong>Fashion Consulting Group</strong>, российский рынок одежды сейчас находится на стадии 
-      перегрева: цены выросли на 50–100% и опережают рост дохода людей, предложение сильно превышает спрос.
+      Вы наверняка заметили, сколько модных брендов в период кризиса были вынуждены закрыться, 
+      и сколько — прямо сейчас не зарабатывают, а только борются за выживание. Согласно ежегодному 
+      аналитическому отчёту крупнейшего консалтингового агентства в сфере моды в России 
+      <strong>Fashion Consulting Group</strong>, российский рынок одежды сейчас находится на стадии 
+      перегрева: цены выросли на 50–100% и опережают рост дохода людей, предложение сильно превышает спрос.
     </p>
     <p class="crisis-text">
-      В таких условиях большинство компаний просто закрываются, и даже из топ-20 компаний стабильно 
-      растёт прибыль всего у четырёх (!). Из них абсолютный лидер по динамике чистой прибыли 
-      (с огромным отрывом от остальных трёх компаний) — <strong>бренд LIME</strong>.
+      В таких условиях большинство компаний просто закрываются, и даже из топ-20 компаний стабильно 
+      растёт прибыль всего у четырёх (!). Из них абсолютный лидер по динамике чистой прибыли 
+      (с огромным отрывом от остальных трёх компаний) — <strong>бренд LIME</strong>.
     </p>
 
     <div class="analytics-wrap">
       <img src="analytics.png" alt="Аналитика Fashion Consulting Group: Топ-20 компаний 2025">
     </div>
-    <p class="analytics-source">Данные из ежегодного аналитического отчёта Fashion Consulting Group</p>
+    <p class="analytics-source">Данные из ежегодного аналитического отчёта Fashion Consulting Group</p>
 
     <div class="highlight-block">
-      <p>За кризисный 2025 год, в то время, как другие бренды закрывались или с трудом выживали, <br>
-      прибыль <span class="lime-text">LIME</span> выросла в <span class="lime-text">2,2 раза</span></p>
+      <p>За кризисный 2025 год, в то время, как другие бренды закрывались или с трудом выживали, <br>
+      прибыль <span class="lime-text">LIME</span> выросла в <span class="lime-text">2,2 раза</span></p>
     </div>
   </div>
 </section>
@@ -482,21 +502,21 @@
 <section class="invite">
   <div class="container">
     <p class="invite-text">
-      Я решила вместе с вами поисследовать причины этого фантастического роста. Потому что то, 
-      что делает Lime, при правильной адаптации и применении может дать очень хорошие результаты экспертам.
+      Я решила вместе с вами поисследовать причины этого фантастического роста. Потому что то, 
+      что делает Lime, при правильной адаптации и применении может дать очень хорошие результаты экспертам.
     </p>
     <p class="invite-text">
-      Приглашаю вас в увлекательное исследование, в котором мы получим крайне ценные результаты! 
+      Приглашаю вас в увлекательное исследование, в котором мы получим крайне ценные результаты! 
       Перед нами будет стоять 2 задачи:
     </p>
     <div class="tasks-grid">
       <div class="task-card">
         <div class="task-num">Задача 1</div>
-        <p><strong>Исследовать 10 точек роста Lime</strong> = найти 10 точек роста вас как эксперта на текущем рынке. Проанализируем инструменты, которые использует Lime, и придумаем идеи, как применить эти инструменты для себя.</p>
+        <p><strong>Исследовать 10 точек роста Lime</strong> = найти 10 точек роста вас как эксперта на текущем рынке. Проанализируем инструменты, которые использует Lime, и придумаем идеи, как применить эти инструменты для себя.</p>
       </div>
       <div class="task-card">
         <div class="task-num">Задача 2</div>
-        <p><strong>Научиться проводить исследования.</strong> Вы поймёте, как видеть и находить лайфхаки, стратегии и приёмы вне своей деятельности и запускать исследования, которые открывают точки роста для вас в вашей сфере. Это крутейший навык, которому больше никто не обучает.</p>
+        <p><strong>Научиться проводить исследования.</strong> Вы поймёте, как видеть и находить лайфхаки, стратегии и приёмы вне своей деятельности и запускать исследования, которые открывают точки роста для вас в вашей сфере. Это крутейший навык, которому больше никто не обучает.</p>
       </div>
     </div>
   </div>
@@ -505,42 +525,42 @@
 <!-- STEPS -->
 <section class="steps-section">
   <div class="container">
-    <h2 class="section-title">БОЛЬШОЕ ИССЛЕДОВАНИЕ<br><span style="color:var(--blue-dark);font-size:0.75em">применения успеха LIME для экспертов</span></h2>
+    <h2 class="section-title">БОЛЬШОЕ ИССЛЕДОВАНИЕ<br><span style="color:var(--blue-dark);font-size:0.75em">применения успеха LIME для экспертов</span></h2>
     <p class="steps-subtitle">Мы пройдём 5 шагов:</p>
     <div class="steps-grid" id="stepsGrid">
       <div class="step-card" data-delay="0">
         <div class="step-circle">1</div>
         <div class="step-content">
           <h3>Точки роста</h3>
-          <p>Изучим самые успешные подходы LIME в продажах и продвижении, которые на кризисном рынке привели их к росту прибыли в 2,2 раза</p>
+          <p>Изучим самые успешные подходы LIME в продажах и продвижении, которые на кризисном рынке привели их к росту прибыли в 2,2 раза</p>
         </div>
       </div>
       <div class="step-card" data-delay="150">
         <div class="step-circle">2</div>
         <div class="step-content">
           <h3>Механизмы действия</h3>
-          <p>Все наши открытия мы переведём в понятные алгоритмы и техники</p>
+          <p>Все наши открытия мы переведём в понятные алгоритмы и техники</p>
         </div>
       </div>
       <div class="step-card" data-delay="300">
         <div class="step-circle">3</div>
         <div class="step-content">
-          <h3>Идеи для внедрения</h3>
-          <p>Используя обнаруженные механизмы действия, вы придумаете конкретные идеи для продвижения и продаж вас как эксперта и ваших продуктов</p>
+          <h3>Идеи для внедрения</h3>
+          <p>Используя обнаруженные механизмы действия, вы придумаете конкретные идеи для продвижения и продаж вас как эксперта и ваших продуктов</p>
         </div>
       </div>
       <div class="step-card" data-delay="450">
         <div class="step-circle">4</div>
         <div class="step-content">
           <h3>Принципы исследования</h3>
-          <p>Мы обсудим принципы, на которых строилось наше удивительное исследование успеха LIME — что позволило нам получить результат?</p>
+          <p>Мы обсудим принципы, на которых строилось наше удивительное исследование успеха LIME — что позволило нам получить результат?</p>
         </div>
       </div>
       <div class="step-card step-5" data-delay="600">
         <div class="step-circle">5</div>
         <div class="step-content">
           <h3>Ваше авторское исследование</h3>
-          <p>Вы поймёте, как можете сами проводить такие исследования и находить новые точки роста!</p>
+          <p>Вы поймёте, как можете сами проводить такие исследования и находить новые точки роста!</p>
         </div>
       </div>
     </div>
@@ -553,7 +573,7 @@
     <div class="buy-card">
       <img src="cocktail.png" alt="Коктейль" style="width:120px;display:block;margin:0 auto 16px;filter:drop-shadow(0 8px 20px rgba(255,78,142,0.3))">
       <h2 class="buy-title">КАК ЗАВОЕВАТЬ КЛИЕНТОВ?</h2>
-      <p class="buy-subtitle">Большое исследование применения успеха LIME для экспертов</p>
+      <p class="buy-subtitle">Большое исследование применения успеха LIME для экспертов</p>
       <div class="buy-event-info">
         <strong>Онлайн-участие</strong> · 16 июля · 18:00 мск<br>
         Доступ к&nbsp;записи: 1 месяц<br>
@@ -574,13 +594,13 @@
 <!-- AUTHOR -->
 <section class="author-section">
   <div class="container">
-    <h2 class="section-title">Автор и ведущая интенсива-исследования</h2>
+    <h2 class="section-title">Автор и ведущая интенсива-исследования</h2>
     <div class="author-card">
       <div class="author-photo-placeholder">🌟</div>
       <div>
         <div class="author-name">Ольга Грищенко</div>
-        <div class="author-role">Автор и ведущая интенсива</div>
-        <p class="author-bio">Описание и фото будут добавлены.</p>
+        <div class="author-role">Автор и ведущая интенсива</div>
+        <p class="author-bio">Описание и фото будут добавлены.</p>
       </div>
     </div>
   </div>
