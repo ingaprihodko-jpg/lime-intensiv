@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Whole lime -->
+  <ellipse cx="100" cy="105" rx="72" ry="70" fill="#7DC832"/>
+  <ellipse cx="100" cy="105" rx="72" ry="70" fill="url(#limeGrad)"/>
+  <!-- Shine -->
+  <ellipse cx="72" cy="72" rx="22" ry="14" fill="rgba(255,255,255,0.22)" transform="rotate(-25 72 72)"/>
+  <!-- Stem -->
+  <path d="M100 35 Q108 18 120 12" stroke="#4a8a1a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <!-- Small leaf -->
+  <ellipse cx="120" cy="11" rx="12" ry="6" fill="#5AAD20" transform="rotate(-30 120 11)"/>
+  <line x1="108" y1="16" x2="120" y2="11" stroke="#3a7a10" stroke-width="1.5"/>
+
+  <!-- Slice (half) -->
+  <g transform="translate(148, 138) rotate(20)">
+    <path d="M0 0 A38 38 0 0 1 38 0 L38 0 A38 38 0 0 1 0 0 Z" fill="#A8E63D" transform="translate(-19,0)"/>
+    <path d="M-38 0 A38 38 0 0 1 38 0 Z" fill="#CBEF7A"/>
+    <!-- Segments -->
+    <line x1="0" y1="0" x2="0" y2="-38" stroke="#7DC832" stroke-width="1.2" transform="translate(0,-1)"/>
+    <line x1="0" y1="0" x2="19" y2="-33" stroke="#7DC832" stroke-width="1.2" transform="translate(0,-1)"/>
+    <line x1="0" y1="0" x2="-19" y2="-33" stroke="#7DC832" stroke-width="1.2" transform="translate(0,-1)"/>
+    <line x1="0" y1="0" x2="33" y2="-19" stroke="#7DC832" stroke-width="1.2" transform="translate(0,-1)"/>
+    <line x1="0" y1="0" x2="-33" y2="-19" stroke="#7DC832" stroke-width="1.2" transform="translate(0,-1)"/>
+    <!-- Peel edge -->
+    <path d="M-38 0 A38 38 0 0 1 38 0" fill="none" stroke="#5AAD20" stroke-width="4"/>
+    <line x1="-38" y1="0" x2="38" y2="0" stroke="#5AAD20" stroke-width="2"/>
+    <!-- Center -->
+    <circle cx="0" cy="-6" r="5" fill="#A8E63D" stroke="#7DC832" stroke-width="1"/>
+  </g>
+
+  <!-- Juice drops -->
+  <circle cx="155" cy="105" r="3" fill="#CBEF7A" opacity="0.8"/>
+  <circle cx="162" cy="115" r="2" fill="#CBEF7A" opacity="0.7"/>
+  <circle cx="148" cy="118" r="2.5" fill="#A8E63D" opacity="0.7"/>
+
+  <defs>
+    <radialGradient id="limeGrad" cx="40%" cy="35%">
+      <stop offset="0%" stop-color="#9ADB45"/>
+      <stop offset="60%" stop-color="#6BBF28"/>
+      <stop offset="100%" stop-color="#4A8A10"/>
+    </radialGradient>
+  </defs>
+</svg>
