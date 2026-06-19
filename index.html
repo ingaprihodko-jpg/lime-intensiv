@@ -703,14 +703,14 @@
 
     // All horizontal moves happen at a circle's own y (above its own text, always safe).
     // All vertical moves happen along gapX (clear of both columns' text at any height).
-    // 4 -> 3 happens at a constant y (their shared row, above both texts) - safe direct line.
+    // Order strictly 1 -> 2 -> 3 -> 4 -> 5 (numeric order, not a snake).
     const pts = [
       c2,
       { cx: gapX, cy: c2.cy },
-      { cx: gapX, cy: c4.cy },
-      c4,
-      c3,
       { cx: gapX, cy: c3.cy },
+      c3,
+      c4,
+      { cx: gapX, cy: c4.cy },
       { cx: gapX, cy: c5.cy },
       c5
     ];
