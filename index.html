@@ -689,39 +689,32 @@
     const circles = cards.map(c => rel(c.querySelector('.step-circle').getBoundingClientRect()));
     const contents = cards.map(c => rel(c.querySelector('.step-content').getBoundingClientRect()));
     const [c1, c2, c3, c4, c5] = circles;
-    const [t1, t2, t3, t4] = contents;
+    const [t1, t2] = contents;
 
     svg.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
     svg.setAttribute('width', gridRect.width);
     svg.setAttribute('height', gridRect.height);
 
     const archY = Math.min(c1.top, c2.top) - 45;
-    const peakX = Math.max(t2.right, t4.right) + 35; // outside grid, right
-    const gapX = (t1.right + t2.left) / 2; // safe corridor between columns
-    const leftClear = -30; // outside grid, left
-    const row34Bottom = Math.max(t3.bottom, t4.bottom);
-    const dipY = row34Bottom + 35; // below all row2 text
-    const dipY2 = dipY + 75;
+    // Vertical corridor strictly BETWEEN the two columns - never enters either column's text width,
+    // and never exits the grid box (no clipping risk regardless of viewport width).
+    const gapX = (t1.right + t2.left) / 2;
 
-    // Waypoints for the snake from 2 onward (1->2 arch handled separately below)
+    // All horizontal moves happen at a circle's own y (above its own text, always safe).
+    // All vertical moves happen along gapX (clear of both columns' text at any height).
+    // 4 -> 3 happens at a constant y (their shared row, above both texts) - safe direct line.
     const pts = [
       c2,
-      { cx: peakX, cy: c2.cy },
-      { cx: peakX, cy: c4.cy },
-      c4,
+      { cx: gapX, cy: c2.cy },
       { cx: gapX, cy: c4.cy },
-      { cx: gapX, cy: dipY },
-      { cx: leftClear, cy: dipY },
-      { cx: leftClear, cy: c3.cy },
+      c4,
       c3,
-      { cx: leftClear, cy: c3.cy + 0.01 },
-      { cx: leftClear, cy: dipY2 },
-      { cx: c5.cx, cy: dipY2 },
+      { cx: gapX, cy: c3.cy },
+      { cx: gapX, cy: c5.cy },
       c5
     ];
 
-    // Round each interior corner: pull back `r` px along each adjacent segment, bend through with a Q.
-    const r = 55;
+    const r = 40;
     let snake = '';
     for (let i = 1; i < pts.length - 1; i++) {
       const prev = pts[i - 1], cur = pts[i], next = pts[i + 1];
