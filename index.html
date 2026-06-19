@@ -285,10 +285,10 @@
   .steps-path {
     fill: none;
     stroke: url(#stepsGradient);
-    stroke-width: 0.9;
+    stroke-width: 6;
     stroke-linecap: round;
-    stroke-dasharray: 400;
-    stroke-dashoffset: 400;
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
     transition: stroke-dashoffset 1.8s cubic-bezier(0.65, 0, 0.35, 1);
   }
   .steps-grid.path-visible .steps-path { stroke-dashoffset: 0; }
@@ -549,7 +549,7 @@
     <h2 class="section-title">БОЛЬШОЕ ИССЛЕДОВАНИЕ<br><span style="color:var(--blue-dark);font-size:0.75em">применения успеха LIME для экспертов</span></h2>
     <p class="steps-subtitle">Мы пройдём 5 шагов:</p>
     <div class="steps-grid" id="stepsGrid">
-      <svg class="steps-path-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <svg class="steps-path-svg" id="stepsPathSvg">
         <defs>
           <linearGradient id="stepsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#5BB8F5"/>
@@ -560,8 +560,7 @@
             <path d="M0,0 L10,5 L0,10 Z" fill="#A8E63D"/>
           </marker>
         </defs>
-        <path class="steps-path" marker-end="url(#stepsArrow)"
-          d="M 3.4,10.8 Q 29.4,2 55.4,10.8 Q 70,29 55.4,47.6 Q 29.4,57 4.5,48.5 Q 0,73 4,74 Q 11,86 27,80" />
+        <path class="steps-path" id="stepsPath" marker-end="url(#stepsArrow)" d="" />
       </svg>
       <div class="step-card" data-delay="0">
         <div class="step-circle">1</div>
@@ -666,17 +665,98 @@
 
   document.querySelectorAll('.step-card').forEach(card => observer.observe(card));
 
+  // Build connecting path dynamically from REAL measured positions (avoids hardcoded % drift)
+  function buildStepsPath() {
+    const grid = document.getElementById('stepsGrid');
+    const svg = document.getElementById('stepsPathSvg');
+    const path = document.getElementById('stepsPath');
+    if (!grid || !svg || !path) return;
+    if (window.innerWidth <= 768) return; // mobile: path hidden, skip calc
+
+    const cards = Array.from(grid.querySelectorAll('.step-card'));
+    if (cards.length < 5) return;
+    const gridRect = grid.getBoundingClientRect();
+
+    function rel(rect) {
+      return {
+        left: rect.left - gridRect.left, right: rect.right - gridRect.left,
+        top: rect.top - gridRect.top, bottom: rect.bottom - gridRect.top,
+        cx: rect.left - gridRect.left + rect.width / 2,
+        cy: rect.top - gridRect.top + rect.height / 2
+      };
+    }
+
+    const circles = cards.map(c => rel(c.querySelector('.step-circle').getBoundingClientRect()));
+    const contents = cards.map(c => rel(c.querySelector('.step-content').getBoundingClientRect()));
+    const [c1, c2, c3, c4, c5] = circles;
+    const [t1, t2, t3, t4] = contents;
+
+    svg.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
+    svg.setAttribute('width', gridRect.width);
+    svg.setAttribute('height', gridRect.height);
+
+    const archY = Math.min(c1.top, c2.top) - 45;
+    const peakX = Math.max(t2.right, t4.right) + 35; // outside grid, right
+    const gapX = (t1.right + t2.left) / 2; // safe corridor between columns
+    const leftClear = -30; // outside grid, left
+    const row34Bottom = Math.max(t3.bottom, t4.bottom);
+    const dipY = row34Bottom + 35; // below all row2 text
+    const dipY2 = dipY + 75;
+
+    // Waypoints for the snake from 2 onward (1->2 arch handled separately below)
+    const pts = [
+      c2,
+      { cx: peakX, cy: c2.cy },
+      { cx: peakX, cy: c4.cy },
+      c4,
+      { cx: gapX, cy: c4.cy },
+      { cx: gapX, cy: dipY },
+      { cx: leftClear, cy: dipY },
+      { cx: leftClear, cy: c3.cy },
+      c3,
+      { cx: leftClear, cy: c3.cy + 0.01 },
+      { cx: leftClear, cy: dipY2 },
+      { cx: c5.cx, cy: dipY2 },
+      c5
+    ];
+
+    // Round each interior corner: pull back `r` px along each adjacent segment, bend through with a Q.
+    const r = 55;
+    let snake = '';
+    for (let i = 1; i < pts.length - 1; i++) {
+      const prev = pts[i - 1], cur = pts[i], next = pts[i + 1];
+      const d1 = Math.hypot(cur.cx - prev.cx, cur.cy - prev.cy) || 1;
+      const d2 = Math.hypot(next.cx - cur.cx, next.cy - cur.cy) || 1;
+      const r1 = Math.min(r, d1 / 2), r2 = Math.min(r, d2 / 2);
+      const inX = cur.cx - (cur.cx - prev.cx) / d1 * r1;
+      const inY = cur.cy - (cur.cy - prev.cy) / d1 * r1;
+      const outX = cur.cx + (next.cx - cur.cx) / d2 * r2;
+      const outY = cur.cy + (next.cy - cur.cy) / d2 * r2;
+      snake += `L ${inX},${inY} Q ${cur.cx},${cur.cy} ${outX},${outY} `;
+    }
+    snake += `L ${pts[pts.length-1].cx},${pts[pts.length-1].cy}`;
+
+    const d = `M ${c1.cx},${c1.cy} Q ${(c1.cx+c2.cx)/2},${archY} ${c2.cx},${c2.cy} ` + snake;
+
+    path.setAttribute('d', d);
+  }
+
   // Draw connecting path when steps section enters view
   const pathObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
+        buildStepsPath();
         setTimeout(() => entry.target.classList.add('path-visible'), 200);
         pathObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.2 });
   const stepsGridEl = document.getElementById('stepsGrid');
-  if (stepsGridEl) pathObserver.observe(stepsGridEl);
+  if (stepsGridEl) {
+    buildStepsPath();
+    pathObserver.observe(stepsGridEl);
+  }
+  window.addEventListener('resize', () => { buildStepsPath(); });
 </script>
 </body>
 </html>
