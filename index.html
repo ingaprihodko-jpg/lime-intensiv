@@ -281,6 +281,7 @@
     width: 100%; height: 100%;
     pointer-events: none;
     z-index: 0;
+    overflow: visible;
   }
   .steps-path {
     fill: none;
@@ -695,7 +696,7 @@
     svg.setAttribute('width', gridRect.width);
     svg.setAttribute('height', gridRect.height);
 
-    const archY = Math.min(c1.top, c2.top) - 45;
+    const archY = Math.min(c1.top, c2.top) - 85;
     // Vertical corridor strictly BETWEEN the two columns - never enters either column's text width,
     // and never exits the grid box (no clipping risk regardless of viewport width).
     const gapX = (t1.right + t2.left) / 2;
@@ -714,7 +715,7 @@
       c5
     ];
 
-    const r = 40;
+    const r = 95;
     let snake = '';
     for (let i = 1; i < pts.length - 1; i++) {
       const prev = pts[i - 1], cur = pts[i], next = pts[i + 1];
@@ -729,7 +730,7 @@
     }
     snake += `L ${pts[pts.length-1].cx},${pts[pts.length-1].cy}`;
 
-    const d = `M ${c1.cx},${c1.cy} Q ${(c1.cx+c2.cx)/2},${archY} ${c2.cx},${c2.cy} ` + snake;
+    const d = `M ${c1.cx},${c1.cy} C ${c1.cx+(c2.cx-c1.cx)*0.2},${archY} ${c1.cx+(c2.cx-c1.cx)*0.8},${archY} ${c2.cx},${c2.cy} ` + snake;
 
     path.setAttribute('d', d);
   }
