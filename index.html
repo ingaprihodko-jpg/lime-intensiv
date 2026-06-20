@@ -733,21 +733,22 @@
     path.setAttribute('d', d);
   }
 
-  // Draw connecting path when steps section enters view
+  // Draw connecting path when steps section enters view.
+  // Delay matches the slowest .step-card reveal animation (max delay 600ms + 0.5s transition)
+  // so circle positions are measured AFTER they've settled, not mid-animation.
   const pathObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        buildStepsPath();
-        setTimeout(() => entry.target.classList.add('path-visible'), 200);
+        setTimeout(() => {
+          buildStepsPath();
+          entry.target.classList.add('path-visible');
+        }, 1150);
         pathObserver.unobserve(entry.target);
       }
     });
   }, { threshold: 0.2 });
   const stepsGridEl = document.getElementById('stepsGrid');
-  if (stepsGridEl) {
-    buildStepsPath();
-    pathObserver.observe(stepsGridEl);
-  }
+  if (stepsGridEl) pathObserver.observe(stepsGridEl);
   window.addEventListener('resize', () => { buildStepsPath(); });
 </script>
 </body>
