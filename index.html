@@ -696,15 +696,14 @@
     svg.setAttribute('width', gridRect.width);
     svg.setAttribute('height', gridRect.height);
 
-    const archY = Math.min(c1.top, c2.top) - 85;
     // Vertical corridor strictly BETWEEN the two columns - never enters either column's text width,
     // and never exits the grid box (no clipping risk regardless of viewport width).
     const gapX = (t1.right + t2.left) / 2;
 
-    // All horizontal moves happen at a circle's own y (above its own text, always safe).
-    // All vertical moves happen along gapX (clear of both columns' text at any height).
-    // Order strictly 1 -> 2 -> 3 -> 4 -> 5 (numeric order, not a snake).
+    // Uniform style throughout: straight runs between same-row circles (1-2, 3-4),
+    // smooth corridor jumps between rows (2-3, 4-5). One consistent corner-rounding pass.
     const pts = [
+      c1,
       c2,
       { cx: gapX, cy: c2.cy },
       { cx: gapX, cy: c3.cy },
@@ -715,8 +714,8 @@
       c5
     ];
 
-    const r = 95;
-    let snake = '';
+    const r = 60;
+    let d = `M ${pts[0].cx},${pts[0].cy} `;
     for (let i = 1; i < pts.length - 1; i++) {
       const prev = pts[i - 1], cur = pts[i], next = pts[i + 1];
       const d1 = Math.hypot(cur.cx - prev.cx, cur.cy - prev.cy) || 1;
@@ -726,11 +725,9 @@
       const inY = cur.cy - (cur.cy - prev.cy) / d1 * r1;
       const outX = cur.cx + (next.cx - cur.cx) / d2 * r2;
       const outY = cur.cy + (next.cy - cur.cy) / d2 * r2;
-      snake += `L ${inX},${inY} Q ${cur.cx},${cur.cy} ${outX},${outY} `;
+      d += `L ${inX},${inY} Q ${cur.cx},${cur.cy} ${outX},${outY} `;
     }
-    snake += `L ${pts[pts.length-1].cx},${pts[pts.length-1].cy}`;
-
-    const d = `M ${c1.cx},${c1.cy} C ${c1.cx+(c2.cx-c1.cx)*0.2},${archY} ${c1.cx+(c2.cx-c1.cx)*0.8},${archY} ${c2.cx},${c2.cy} ` + snake;
+    d += `L ${pts[pts.length-1].cx},${pts[pts.length-1].cy}`;
 
     path.setAttribute('d', d);
   }
