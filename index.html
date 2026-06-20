@@ -690,25 +690,28 @@
     const circles = cards.map(c => rel(c.querySelector('.step-circle').getBoundingClientRect()));
     const contents = cards.map(c => rel(c.querySelector('.step-content').getBoundingClientRect()));
     const [c1, c2, c3, c4, c5] = circles;
-    const [t1, t2] = contents;
+    const [t1, t2, t3, t4] = contents;
 
     svg.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
     svg.setAttribute('width', gridRect.width);
     svg.setAttribute('height', gridRect.height);
 
-    // Vertical corridor strictly BETWEEN the two columns - safe for the 4->5 jump.
-    const gapX = (t1.right + t2.left) / 2;
     // Right-side corridor that clears block 2's own text width - goes AROUND block 2.
     const peakX = t2.right + 30;
+    // Right-side corridor that clears block 4's own text width - goes AROUND block 4.
+    const peakX4 = t4.right + 30;
     // Horizontal band in the middle of the gap between row 1 (text) and row 2 (circles) -
     // nothing lives here, so the line can freely pass above both 3 and 4.
     const rowGapY = (Math.max(t1.bottom, t2.bottom) + Math.min(c3.top, c4.top)) / 2;
     // A bit to the left of circle 3, so the line visibly enters it from the left side.
     const leftOf3 = c3.cx - 45;
+    // Below both row-2 texts, clear corridor for the 4 -> 5 detour around block 4.
+    const dipY = Math.max(t3.bottom, t4.bottom) + 25;
 
     // 2 -> goes AROUND block 2 (right side, clearing its text) -> drops to the row gap band
     // -> travels left, above 4 and 3 -> swings left of 3 -> enters 3 from the left.
-    // 3 -> 4 stays a direct line; 4 -> 5 drops through the inner gap corridor.
+    // 3 -> 4 stays a direct line.
+    // 4 -> goes AROUND block 4 (right side, clearing its text) -> drops below row 2 -> enters 5 from above.
     const pts = [
       c1,
       c2,
@@ -718,8 +721,9 @@
       { cx: leftOf3, cy: c3.cy },
       c3,
       c4,
-      { cx: gapX, cy: c4.cy },
-      { cx: gapX, cy: c5.cy },
+      { cx: peakX4, cy: c4.cy },
+      { cx: peakX4, cy: dipY },
+      { cx: c5.cx, cy: dipY },
       c5
     ];
 
@@ -739,6 +743,11 @@
     d += `L ${pts[pts.length-1].cx},${pts[pts.length-1].cy}`;
 
     path.setAttribute('d', d);
+    // Dash length must cover the ACTUAL path length, whatever shape it currently is -
+    // a hardcoded guess breaks silently (tail of the line falls into the dash gap) when the path grows.
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = grid.classList.contains('path-visible') ? 0 : len;
   }
 
   // Draw connecting path when steps section enters view.
@@ -748,8 +757,12 @@
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         setTimeout(() => {
-          buildStepsPath();
-          entry.target.classList.add('path-visible');
+          buildStepsPath(); // sets d + dasharray/dashoffset = full length (hidden)
+          const stepsPathEl = document.getElementById('stepsPath');
+          requestAnimationFrame(() => {
+            entry.target.classList.add('path-visible');
+            if (stepsPathEl) stepsPathEl.style.strokeDashoffset = '0';
+          });
         }, 1150);
         pathObserver.unobserve(entry.target);
       }
