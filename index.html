@@ -698,16 +698,20 @@
 
     // Vertical corridor strictly BETWEEN the two columns - safe for the 4->5 jump.
     const gapX = (t1.right + t2.left) / 2;
-    // Right-side corridor that clears block 2's own text width - used to go AROUND block 2.
-    const peakX = t2.right + 30;
+    // Horizontal band in the middle of the gap between row 1 (text) and row 2 (circles) -
+    // nothing lives here, so the line can freely pass above both 3 and 4.
+    const rowGapY = (Math.max(t1.bottom, t2.bottom) + Math.min(c3.top, c4.top)) / 2;
+    // A bit to the left of circle 3, so the line visibly enters it from the left side.
+    const leftOf3 = c3.cx - 45;
 
-    // Uniform style: straight 1-2 and 3-4 runs; 2->3 loops around block 2's right side;
-    // 4->5 drops through the inner gap corridor.
+    // 2 -> travels above row 2 (over 4 and 3) -> swings left of 3 -> enters 3 from the left.
+    // 3 -> 4 stays a direct line; 4 -> 5 drops through the inner gap corridor.
     const pts = [
       c1,
       c2,
-      { cx: peakX, cy: c2.cy },
-      { cx: peakX, cy: c3.cy },
+      { cx: c2.cx, cy: rowGapY },
+      { cx: leftOf3, cy: rowGapY },
+      { cx: leftOf3, cy: c3.cy },
       c3,
       c4,
       { cx: gapX, cy: c4.cy },
