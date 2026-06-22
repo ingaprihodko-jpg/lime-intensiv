@@ -184,6 +184,43 @@
   }
   .crisis-text strong { color: var(--pink); }
 
+  /* ── STAT CARDS ── */
+  .stat-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1080px;
+    margin: 28px auto;
+  }
+  .stat-card {
+    border-radius: 18px;
+    padding: 28px 26px;
+    text-align: left;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  }
+  .stat-card--blue {
+    background: var(--blue-bg);
+    border-left: 5px solid var(--blue);
+  }
+  .stat-card--pink {
+    background: var(--pink-light);
+    border-left: 5px solid var(--pink);
+  }
+  .stat-number {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: clamp(32px, 4vw, 42px);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .stat-card--blue .stat-number { color: var(--blue-dark); }
+  .stat-card--pink .stat-number { color: var(--pink); }
+  .stat-label {
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+
   /* ── ANALYTICS SLIDE ── */
   .analytics-wrap {
     max-width: 1150px;
@@ -460,6 +497,7 @@
     .hero-right img { max-height: 360px; }
     .hero-meta .date-badge { margin: 0 auto; }
     .tasks-grid { grid-template-columns: 1fr; }
+    .stat-cards { grid-template-columns: 1fr; }
     .steps-grid { grid-template-columns: 1fr; }
     .steps-path-svg { display: none; }
     .step-5 { grid-column: auto; max-width: 100%; }
@@ -496,18 +534,28 @@
 
 <!-- CRISIS -->
 <section class="crisis">
-  <div class="container">
     <p class="crisis-text">
       Вы наверняка заметили, сколько модных брендов в период кризиса были вынуждены закрыться, 
-      и сколько — прямо сейчас не зарабатывают, а только борются за выживание. Согласно ежегодному 
-      аналитическому отчёту крупнейшего консалтингового агентства в сфере моды в России 
-      <strong>Fashion Consulting Group</strong>, российский рынок одежды сейчас находится на стадии 
-      перегрева: цены выросли на 50–100% и опережают рост дохода людей, предложение сильно превышает спрос.
+      и сколько — прямо сейчас не зарабатывают, а только борются за выживание.
     </p>
+
+    <div class="stat-cards">
+      <div class="stat-card stat-card--blue">
+        <div class="stat-number">50–100%</div>
+        <div class="stat-label">рост цен — опережает рост доходов людей</div>
+      </div>
+      <div class="stat-card stat-card--pink">
+        <div class="stat-number">4 из 20</div>
+        <div class="stat-label">компаний с устойчивым ростом прибыли</div>
+      </div>
+    </div>
+
     <p class="crisis-text">
-      В таких условиях большинство компаний просто закрываются, и даже из топ-20 компаний стабильно 
-      растёт прибыль всего у четырёх (!). Из них абсолютный лидер по динамике чистой прибыли 
-      (с огромным отрывом от остальных трёх компаний) — <strong>бренд LIME</strong>.
+      Согласно ежегодному аналитическому отчёту крупнейшего консалтингового агентства в сфере моды в России 
+      <strong>Fashion Consulting Group</strong>, российский рынок одежды сейчас находится на стадии 
+      перегрева, и предложение сильно превышает спрос. Из четырёх растущих компаний абсолютный лидер 
+      по динамике чистой прибыли (с огромным отрывом от остальных трёх) — <strong>бренд LIME</strong>.
+    </p>
     </p>
 
     <div class="analytics-wrap">
