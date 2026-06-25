@@ -641,17 +641,17 @@
         </div>
       </div>
       <div class="step-card" data-delay="300">
-        <div class="step-circle">3</div>
-        <div class="step-content">
-          <h3>Идеи для внедрения</h3>
-          <p>Используя обнаруженные механизмы действия, вы придумаете конкретные идеи для продвижения и продаж вас как эксперта и ваших продуктов</p>
-        </div>
-      </div>
-      <div class="step-card" data-delay="450">
         <div class="step-circle">4</div>
         <div class="step-content">
           <h3>Принципы исследования</h3>
           <p>Мы обсудим принципы, на которых строилось наше удивительное исследование успеха LIME — что позволило нам получить результат?</p>
+        </div>
+      </div>
+      <div class="step-card" data-delay="450">
+        <div class="step-circle">3</div>
+        <div class="step-content">
+          <h3>Идеи для внедрения</h3>
+          <p>Используя обнаруженные механизмы действия, вы придумаете конкретные идеи для продвижения и продаж вас как эксперта и ваших продуктов</p>
         </div>
       </div>
       <div class="step-card step-5" data-delay="600">
@@ -752,8 +752,15 @@
 
     const circles = cards.map(c => rel(c.querySelector('.step-circle').getBoundingClientRect()));
     const contents = cards.map(c => rel(c.querySelector('.step-content').getBoundingClientRect()));
-    const [c1, c2, c3, c4, c5] = circles;
-    const [t1, t2, t3, t4] = contents;
+    // Re-index by the actual number printed in each circle, not by DOM order -
+    // step-card blocks can be reordered in the markup (e.g. swapping 3 and 4)
+    // while the connecting line must always follow numeric order 1->2->3->4->5.
+    const stepNumbers = cards.map(c => parseInt(c.querySelector('.step-circle').textContent.trim(), 10));
+    const circlesByNum = {};
+    const contentsByNum = {};
+    stepNumbers.forEach((n, i) => { circlesByNum[n] = circles[i]; contentsByNum[n] = contents[i]; });
+    const [c1, c2, c3, c4, c5] = [1, 2, 3, 4, 5].map(n => circlesByNum[n]);
+    const [t1, t2, t3, t4] = [1, 2, 3, 4].map(n => contentsByNum[n]);
 
     svg.setAttribute('viewBox', `0 0 ${gridRect.width} ${gridRect.height}`);
     svg.setAttribute('width', gridRect.width);
@@ -761,27 +768,31 @@
 
     // Right-side corridor that clears block 2's own text width - goes AROUND block 2.
     const peakX = t2.right + 30;
-    // Right-side corridor that clears block 4's own text width - goes AROUND block 4.
-    const peakX4 = t4.right + 30;
+    // Right-side corridor that clears block 3's own text width (3 now sits on the right,
+    // mirroring where 4 used to be) - goes AROUND block 3 on its way down to row 2.
+    const peakX3 = t3.right + 30;
     // Horizontal band in the middle of the gap between row 1 (text) and row 2 (circles) -
     // nothing lives here, so the line can freely pass above both 3 and 4.
     const rowGapY = (Math.max(t1.bottom, t2.bottom) + Math.min(c3.top, c4.top)) / 2;
-    // A bit to the left of circle 3, so the line visibly enters it from the left side.
-    const leftOf3 = c3.cx - 45;
     // Below both row-2 texts, clear corridor for the 4 -> 5 detour around block 4.
     const dipY = Math.max(t3.bottom, t4.bottom) + 25;
 
-    // 2 -> goes AROUND block 2 (right side, clearing its text) -> drops to the row gap band
-    // -> travels left, above 4 and 3 -> swings left of 3 -> enters 3 from the left.
-    // 3 -> 4 stays a direct line.
-    // 4 -> goes AROUND block 4 (right side, clearing its text) -> drops below row 2 -> enters 5 from above.
+    // 1 -> 2: direct line along row 1.
+    // 2 -> goes AROUND block 2 (right side, clearing its text) -> drops straight down
+    //   to row 2's circle height -> enters 3 from the right/above (3 now sits on the right,
+    //   directly under 2, so this is a simple vertical corridor, no leftward swing needed).
+    // 3 -> 4: direct line along row 2 (right to left).
+    // 4 -> goes AROUND block 4... actually 4 sits on the LEFT now, so the detour down to 5
+    //   (which sits centered, right of block 4) happens on block 4's right side, clearing
+    //   its own text, then drops below row 2 and enters 5 from above.
+    const peakX4 = t4.right + 30;
     const pts = [
       c1,
       c2,
       { cx: peakX, cy: c2.cy },
       { cx: peakX, cy: rowGapY },
-      { cx: leftOf3, cy: rowGapY },
-      { cx: leftOf3, cy: c3.cy },
+      { cx: peakX3, cy: rowGapY },
+      { cx: peakX3, cy: c3.cy },
       c3,
       c4,
       { cx: peakX4, cy: c4.cy },
