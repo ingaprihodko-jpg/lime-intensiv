@@ -777,19 +777,14 @@
     // Right-side corridor that clears block 2's own text width - goes AROUND block 2,
     // staying tight against the text edge so the corner reads as a sharp, minimal detour.
     const peakX = t2.right + 8;
-    // Right-side corridor that clears block 3's own text width (3 now sits on the right,
-    // mirroring where 4 used to be) - goes AROUND block 3 on its way down to row 2.
-    const peakX3 = t3.right + 30;
-    // Horizontal band in the middle of the gap between row 1 (text) and row 2 (circles) -
-    // nothing lives here, so the line can freely pass above both 3 and 4.
-    const rowGapY = (Math.max(t1.bottom, t2.bottom) + Math.min(c3.top, c4.top)) / 2;
     // Below both row-2 texts, clear corridor for the 4 -> 5 detour around block 4.
     const dipY = Math.max(t3.bottom, t4.bottom) + 25;
 
     // 1 -> 2: direct line along row 1.
-    // 2 -> goes AROUND block 2 (right side, clearing its text) -> drops straight down
-    //   to row 2's circle height -> enters 3 from the right/above (3 now sits on the right,
-    //   directly under 2, so this is a simple vertical corridor, no leftward swing needed).
+    // 2 -> 3: goes AROUND block 2 (right side, clearing its text) -> drops straight
+    //   down to circle 3's own height -> enters 3 directly from the right at that
+    //   height (not via row-gap band), so there's no extra horizontal "tail" cutting
+    //   across block 3's text just before reaching the circle.
     // 3 -> 4: direct line along row 2 (right to left).
     // 4 -> goes AROUND block 4 on its LEFT side (block 4's text sits flush against the
     //   grid's left edge with no margin, so this corridor dips a few px past x=0 -
@@ -804,9 +799,7 @@
       { ...c1, r: R_DEFAULT },
       { ...c2, r: R_DEFAULT },
       { cx: peakX, cy: c2.cy, r: R_TIGHT },
-      { cx: peakX, cy: rowGapY, r: R_TIGHT },
-      { cx: peakX3, cy: rowGapY, r: R_DEFAULT },
-      { cx: peakX3, cy: c3.cy, r: R_DEFAULT },
+      { cx: peakX, cy: c3.cy, r: R_TIGHT },
       { ...c3, r: R_DEFAULT },
       { ...c4, r: R_DEFAULT },
       { cx: peakX4, cy: c4.cy, r: R_TIGHT },
