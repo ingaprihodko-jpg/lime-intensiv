@@ -774,8 +774,9 @@
     svg.setAttribute('width', gridRect.width);
     svg.setAttribute('height', gridRect.height);
 
-    // Right-side corridor that clears block 2's own text width - goes AROUND block 2.
-    const peakX = t2.right + 30;
+    // Right-side corridor that clears block 2's own text width - goes AROUND block 2,
+    // staying tight against the text edge so the corner reads as a sharp, minimal detour.
+    const peakX = t2.right + 8;
     // Right-side corridor that clears block 3's own text width (3 now sits on the right,
     // mirroring where 4 used to be) - goes AROUND block 3 on its way down to row 2.
     const peakX3 = t3.right + 30;
@@ -794,25 +795,30 @@
     //   (which sits centered, right of block 4) happens on block 4's right side, clearing
     //   its own text, then drops below row 2 and enters 5 from above.
     const peakX4 = t4.right + 30;
+    // Each point can carry its own corner radius. Default stays the original 60px
+    // (used by every existing turn); the two corners hugging block 2's text get a
+    // tight 6px radius so that corridor reads as sharp right angles, not a curve.
+    const R_DEFAULT = 60;
+    const R_TIGHT = 6;
     const pts = [
-      c1,
-      c2,
-      { cx: peakX, cy: c2.cy },
-      { cx: peakX, cy: rowGapY },
-      { cx: peakX3, cy: rowGapY },
-      { cx: peakX3, cy: c3.cy },
-      c3,
-      c4,
-      { cx: peakX4, cy: c4.cy },
-      { cx: peakX4, cy: dipY },
-      { cx: c5.cx, cy: dipY },
-      c5
+      { ...c1, r: R_DEFAULT },
+      { ...c2, r: R_DEFAULT },
+      { cx: peakX, cy: c2.cy, r: R_TIGHT },
+      { cx: peakX, cy: rowGapY, r: R_TIGHT },
+      { cx: peakX3, cy: rowGapY, r: R_DEFAULT },
+      { cx: peakX3, cy: c3.cy, r: R_DEFAULT },
+      { ...c3, r: R_DEFAULT },
+      { ...c4, r: R_DEFAULT },
+      { cx: peakX4, cy: c4.cy, r: R_DEFAULT },
+      { cx: peakX4, cy: dipY, r: R_DEFAULT },
+      { cx: c5.cx, cy: dipY, r: R_DEFAULT },
+      { ...c5, r: R_DEFAULT }
     ];
 
-    const r = 60;
     let d = `M ${pts[0].cx},${pts[0].cy} `;
     for (let i = 1; i < pts.length - 1; i++) {
       const prev = pts[i - 1], cur = pts[i], next = pts[i + 1];
+      const r = cur.r ?? R_DEFAULT;
       const d1 = Math.hypot(cur.cx - prev.cx, cur.cy - prev.cy) || 1;
       const d2 = Math.hypot(next.cx - cur.cx, next.cy - cur.cy) || 1;
       const r1 = Math.min(r, d1 / 2), r2 = Math.min(r, d2 / 2);
