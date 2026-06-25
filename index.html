@@ -513,6 +513,14 @@
     .steps-grid { grid-template-columns: 1fr; }
     .steps-path-svg { display: none; }
     .step-5 { grid-column: auto; max-width: 100%; }
+    /* steps-grid's first child is the <svg> path element, so .step-card nth-child
+       counts are shifted by 1 (card "1" is actually nth-child(2), etc).
+       DOM order of cards is 1,2,4,3,5 - force explicit order for numeric 1-2-3-4-5. */
+    .steps-grid .step-card:nth-child(2) { order: 1; }
+    .steps-grid .step-card:nth-child(3) { order: 2; }
+    .steps-grid .step-card:nth-child(4) { order: 4; }
+    .steps-grid .step-card:nth-child(5) { order: 3; }
+    .steps-grid .step-card:nth-child(6) { order: 5; }
     .author-card { flex-direction: column; text-align: center; }
     .highlight-block { padding: 28px 24px; }
     .buy-card { padding: 32px 20px; }
