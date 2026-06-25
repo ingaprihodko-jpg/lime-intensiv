@@ -791,10 +791,10 @@
     //   to row 2's circle height -> enters 3 from the right/above (3 now sits on the right,
     //   directly under 2, so this is a simple vertical corridor, no leftward swing needed).
     // 3 -> 4: direct line along row 2 (right to left).
-    // 4 -> goes AROUND block 4... actually 4 sits on the LEFT now, so the detour down to 5
-    //   (which sits centered, right of block 4) happens on block 4's right side, clearing
-    //   its own text, then drops below row 2 and enters 5 from above.
-    const peakX4 = t4.right + 30;
+    // 4 -> goes AROUND block 4 on its LEFT side (block 4's text sits flush against the
+    //   grid's left edge with no margin, so this corridor dips a few px past x=0 -
+    //   the SVG has overflow:visible so nothing gets clipped) -> drops below row 2 -> enters 5 from above.
+    const peakX4 = t4.left - 8;
     // Each point can carry its own corner radius. Default stays the original 60px
     // (used by every existing turn); the two corners hugging block 2's text get a
     // tight 6px radius so that corridor reads as sharp right angles, not a curve.
@@ -809,8 +809,8 @@
       { cx: peakX3, cy: c3.cy, r: R_DEFAULT },
       { ...c3, r: R_DEFAULT },
       { ...c4, r: R_DEFAULT },
-      { cx: peakX4, cy: c4.cy, r: R_DEFAULT },
-      { cx: peakX4, cy: dipY, r: R_DEFAULT },
+      { cx: peakX4, cy: c4.cy, r: R_TIGHT },
+      { cx: peakX4, cy: dipY, r: R_TIGHT },
       { cx: c5.cx, cy: dipY, r: R_DEFAULT },
       { ...c5, r: R_DEFAULT }
     ];
