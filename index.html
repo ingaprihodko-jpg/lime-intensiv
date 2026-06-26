@@ -650,7 +650,7 @@
       </div>
       <div class="step-card" data-delay="300">
         <div class="step-circle">4</div>
-        <div class="step-content">
+        <div class="step-content" style="padding-left:20px">
           <h3>Принципы исследования</h3>
           <p>Мы обсудим принципы, на которых строилось наше удивительное исследование успеха LIME — что позволило нам получить результат?</p>
         </div>
@@ -789,7 +789,7 @@
     // 4 -> goes AROUND block 4 on its LEFT side (block 4's text sits flush against the
     //   grid's left edge with no margin, so this corridor dips a few px past x=0 -
     //   the SVG has overflow:visible so nothing gets clipped) -> drops below row 2 -> enters 5 from above.
-    const peakX4 = 4;
+    const peakX4 = 10;
     // Each point can carry its own corner radius. Default stays the original 60px
     // (used by every existing turn); the two corners hugging block 2's text get a
     // tight 6px radius so that corridor reads as sharp right angles, not a curve.
