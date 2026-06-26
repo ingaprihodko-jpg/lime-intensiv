@@ -382,6 +382,7 @@
     margin-bottom: 6px;
   }
   .step-content p { font-size: 15px; line-height: 1.6; color: var(--text); }
+  .step-content--offset { padding-left: 20px; }
   .step-5 .step-circle {
     background: linear-gradient(135deg, var(--lime) 0%, var(--lime-dark) 100%);
     box-shadow: 0 6px 20px rgba(168,230,61,0.5);
@@ -513,6 +514,7 @@
     .steps-grid { grid-template-columns: 1fr; }
     .steps-path-svg { display: none; }
     .step-5 { grid-column: auto; max-width: 100%; }
+    .step-content--offset { padding-left: 0; }
     /* steps-grid's first child is the <svg> path element, so .step-card nth-child
        counts are shifted by 1 (card "1" is actually nth-child(2), etc).
        DOM order of cards is 1,2,4,3,5 - force explicit order for numeric 1-2-3-4-5. */
@@ -650,7 +652,7 @@
       </div>
       <div class="step-card" data-delay="300">
         <div class="step-circle">4</div>
-        <div class="step-content" style="padding-left:20px">
+        <div class="step-content step-content--offset">
           <h3>Принципы исследования</h3>
           <p>Мы обсудим принципы, на которых строилось наше удивительное исследование успеха LIME — что позволило нам получить результат?</p>
         </div>
