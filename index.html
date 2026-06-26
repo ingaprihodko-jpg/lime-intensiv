@@ -789,7 +789,7 @@
     // 4 -> goes AROUND block 4 on its LEFT side (block 4's text sits flush against the
     //   grid's left edge with no margin, so this corridor dips a few px past x=0 -
     //   the SVG has overflow:visible so nothing gets clipped) -> drops below row 2 -> enters 5 from above.
-    const peakX4 = t4.left - 25;
+    const peakX4 = 4;
     // Each point can carry its own corner radius. Default stays the original 60px
     // (used by every existing turn); the two corners hugging block 2's text get a
     // tight 6px radius so that corridor reads as sharp right angles, not a curve.
